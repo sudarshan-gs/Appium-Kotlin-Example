@@ -12,7 +12,7 @@ repositories {
     mavenCentral()
 }
 
-test{
+test {
     useJUnitPlatform()
 }
 
@@ -21,8 +21,8 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile group: 'io.appium', name: 'java-client', version: '7.2.0'
     compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.5.2'
-
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.1'
 }
 
 compileKotlin {
