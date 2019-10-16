@@ -1,15 +1,14 @@
 package components
 
 import componentInterfaces.IButton
-import constants.Id
+import utilities.Id
 
-class Button(private var locatorType: String = Id, private var locatorValue: String) :
+class Button(locatorType: String = Id, locatorValue: String) :
     IButton, Element(locatorType, locatorValue) {
-    override fun submit() {
-        try {
-            getElement().submit()
-        } catch (error: Exception) {
-            throw Exception("Error submitting the button. ${error.message}")
-        }
+
+    override fun submit() = try {
+        with(getElement()) { submit() }
+    } catch (error: Exception) {
+        throw Exception("Error submitting the button. ${error.message}")
     }
 }

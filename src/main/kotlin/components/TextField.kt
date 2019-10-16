@@ -1,15 +1,15 @@
 package components
 
 import componentInterfaces.ITextField
-import constants.Id
+import utilities.Id
 
-class TextField(private val locatorType: String = Id, private val locatorValue: String) :
+class TextField(locatorType: String = Id, locatorValue: String) :
     Element(locatorType, locatorValue), ITextField {
-    override fun setText(value: String) {
-        try {
-            getElement().sendKeys()
-        } catch (error: Exception) {
-            throw Exception("Error setting text value. ${error.message}")
-        }
+
+    override fun setText(value: String) = try {
+        with(getElement()) { sendKeys() }
+    } catch (error: Exception) {
+        throw Exception("Error setting text value. ${error.message}")
     }
+
 }

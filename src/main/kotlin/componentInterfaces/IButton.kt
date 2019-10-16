@@ -1,5 +1,5 @@
 package componentInterfaces
 
-interface IButton: Touchable, IElement {
+interface IButton: ITouchable, IElement {
     fun submit()
 }

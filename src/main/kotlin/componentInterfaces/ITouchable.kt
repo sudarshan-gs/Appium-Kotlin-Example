@@ -1,6 +1,6 @@
 package componentInterfaces
 
-interface Touchable {
+interface ITouchable {
     fun tap()
     fun longPress()
 }
