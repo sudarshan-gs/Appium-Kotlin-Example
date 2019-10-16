@@ -1,6 +1,5 @@
 package filereader
 
-import java.io.File
 import java.io.FileInputStream
 import java.nio.file.Paths
 import java.util.*
@@ -13,7 +12,6 @@ class PropertiesReader(private val fileName: String) {
     }
 
     fun getAllPropertiesWithValues(): Map<Any, Any> {
-        val propertiesAndValues: Map<String, String> = mutableMapOf()
         return properties.toMap()
     }
 
