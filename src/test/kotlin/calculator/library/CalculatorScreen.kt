@@ -23,7 +23,7 @@ class CalculatorScreen {
 
     fun addNumbers(vararg numbers: Int): CalculatorScreen {
         numbers.forEachIndexed { index, num ->
-            val digitButton = Button(locatorValue = digitSelector.replaceAfterLast("_", num.toString()))
+            val digitButton = Button(Id, digitSelector.replaceAfterLast("_", num.toString()))
             with(digitButton) { tap() }
 
             if (index != numbers.size - 1) {
@@ -37,7 +37,7 @@ class CalculatorScreen {
 
     fun subtractNumbers(vararg numbers: Int): CalculatorScreen {
         numbers.forEachIndexed { index, num ->
-            val digitButton = Button(locatorValue = digitSelector.replaceAfterLast("_", num.toString()))
+            val digitButton = Button(Id, digitSelector.replaceAfterLast("_", num.toString()))
             with(digitButton) { tap() }
 
             if (index != numbers.size - 1) {
@@ -58,7 +58,7 @@ class CalculatorScreen {
 
     fun inputDigits(vararg numbers: Int): CalculatorScreen {
         numbers
-            .map { Button(locatorValue = digitSelector.replaceAfterLast("_", it.toString())) }
+            .map { Button(Id, digitSelector.replaceAfterLast("_", it.toString())) }
             .forEach {
                 it.tap()
             }
