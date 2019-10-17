@@ -4,16 +4,12 @@ import filereader.PropertiesReader
 import io.appium.java_client.MobileElement
 import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.android.AndroidTouchAction
-import io.appium.java_client.remote.MobileCapabilityType
 import io.appium.java_client.touch.WaitOptions
 import io.appium.java_client.touch.offset.PointOption
-import org.openqa.selenium.JavascriptExecutor
 import org.openqa.selenium.remote.DesiredCapabilities
 import java.net.URL
 import java.nio.file.Paths
 import java.time.Duration
-import org.openqa.selenium.interactions.touch.TouchActions
-import javax.swing.Spring.height
 
 
 object AndroidDriverProvider : MobileDriver {
@@ -144,13 +140,14 @@ object AndroidDriverProvider : MobileDriver {
                                 System.getProperty("user.dir"),
                                 "app", "${with(configProperties) { get("app").toString() }}.apk"
                             )
-                        configProperties[k] = path.toString()
-                    }
 
-                    setCapability(
-                        k as String,
-                        v as String
-                    )
+                        setCapability(k as String, path.toString())
+                    } else {
+                        setCapability(
+                            k as String,
+                            v as String
+                        )
+                    }
                 }
             }
 

@@ -6,16 +6,18 @@ import componentInterfaces.ITextField
 import components.Button
 import components.ElementsList
 import components.TextField
+import utilities.ContentDesc
+import utilities.Id
 import utilities.Xpath
 
 class CalculatorScreen {
     private var digitSelector = "digit_"
-    private val resultTextField: ITextField = TextField(locatorValue = "result")
-    private val addButton: IButton = Button(locatorValue = "plus")
-    private val minusButton: IButton = Button(locatorValue = "minus")
-    private val equalsButton: IButton = Button(locatorValue = "equals")
+    private val resultTextField: ITextField = TextField(Id, "result")
+    private val addButton: IButton = Button(ContentDesc, "plus")
+    private val minusButton: IButton = Button(ContentDesc, "minus")
+    private val equalsButton: IButton = Button(ContentDesc, "equals")
     private val deleteButton: IButton = Button(Xpath, "//android.widget.Button[@text ='DEL' or @text ='CLR']")
-    private val piButton: IButton = Button(locatorValue = "const_pi")
+    private val piButton: IButton = Button(Id, "const_pi")
     private val historyTextViews: IElementsList =
         ElementsList(Xpath, "//*[contains(@resource-id, 'history_') and @class='android.widget.TextView']")
 

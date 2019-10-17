@@ -1,9 +1,8 @@
 package components
 
 import componentInterfaces.IButton
-import utilities.Id
 
-class Button(locatorType: String = Id, locatorValue: String) :
+class Button(locatorType: String, locatorValue: String) :
     IButton, Element(locatorType, locatorValue) {
 
     override fun submit() = try {
