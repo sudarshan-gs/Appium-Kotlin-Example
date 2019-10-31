@@ -1,21 +1,24 @@
 package components
 
-import appium.core.AndroidDriverProvider
+import appium.core.IMobileDriver
 import componentInterfaces.IElement
 import componentInterfaces.IElementsList
 import utilities.LocatorUtilities
 import utilities.Xpath
 
-class ElementsList(private val locatorType: String, private var locatorValue: String) : IElementsList {
-
-    private val driver = AndroidDriverProvider.getInstance()
+class ElementsList(
+    private val driver: IMobileDriver,
+    private val locatorType: String,
+    private var locatorValue: String
+) : IElementsList {
 
     override fun getElements(): List<IElement> {
         return try {
             val elements = arrayListOf<Element>()
-            val elementsCount = driver.findElements(LocatorUtilities.getLocator(locatorType, locatorValue)).size
+            val elementsCount =
+                driver.instance.findElements(LocatorUtilities.getLocator(locatorType, locatorValue)).size
             for (counter in 1..elementsCount) {
-                elements.add(Element(Xpath, "($locatorValue)[$counter]"))
+                elements.add(Element(driver, Xpath, "($locatorValue)[$counter]"))
             }
             elements
         } catch (error: Exception) {

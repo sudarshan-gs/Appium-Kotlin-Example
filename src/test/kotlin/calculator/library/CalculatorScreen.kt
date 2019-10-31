@@ -1,5 +1,6 @@
 package calculator.library
 
+import appium.core.IMobileDriver
 import componentInterfaces.IButton
 import componentInterfaces.IElementsList
 import componentInterfaces.ITextField
@@ -10,66 +11,65 @@ import utilities.ContentDesc
 import utilities.Id
 import utilities.Xpath
 
-class CalculatorScreen {
-    private var digitSelector = "digit_"
-    private val resultTextField: ITextField = TextField(Id, "result")
-    private val addButton: IButton = Button(ContentDesc, "plus")
-    private val minusButton: IButton = Button(ContentDesc, "minus")
-    private val equalsButton: IButton = Button(ContentDesc, "equals")
-    private val deleteButton: IButton = Button(Xpath, "//android.widget.Button[@text ='DEL' or @text ='CLR']")
-    private val piButton: IButton = Button(Id, "const_pi")
+class CalculatorScreen(private var driver: IMobileDriver) {
+
+    private val resultTextField: ITextField = TextField(driver, Id, "result")
+    private val addButton: IButton = Button(driver, ContentDesc, "plus")
+    private val minusButton: IButton = Button(driver, ContentDesc, "minus")
+    private val equalsButton: IButton = Button(driver, ContentDesc, "equals")
+    private val deleteButton: IButton = Button(driver, Xpath, "//android.widget.Button[@text ='DEL' or @text ='CLR']")
+    private val piButton: IButton = Button(driver, Id, "const_pi")
     private val historyTextViews: IElementsList =
-        ElementsList(Xpath, "//*[contains(@resource-id, 'history_') and @class='android.widget.TextView']")
+        ElementsList(driver, Xpath, "//*[contains(@resource-id, 'history_') and @class='android.widget.TextView']")
+    private var digitSelector = "digit_"
 
     fun addNumbers(vararg numbers: Int): CalculatorScreen {
         numbers.forEachIndexed { index, num ->
-            val digitButton = Button(Id, digitSelector.replaceAfterLast("_", num.toString()))
-            with(digitButton) { tap() }
+            val digitButton = Button(driver, Id, digitSelector.replaceAfterLast("_", num.toString()))
+            digitButton.tap()
 
             if (index != numbers.size - 1) {
-                with(addButton) { tap() }
+                addButton.tap()
             }
         }
 
-        with(equalsButton) { tap() }
+        equalsButton.tap()
         return this
     }
 
     fun subtractNumbers(vararg numbers: Int): CalculatorScreen {
         numbers.forEachIndexed { index, num ->
-            val digitButton = Button(Id, digitSelector.replaceAfterLast("_", num.toString()))
-            with(digitButton) { tap() }
+            val digitButton = Button(driver, Id, digitSelector.replaceAfterLast("_", num.toString()))
+            digitButton.tap()
 
             if (index != numbers.size - 1) {
-                with(minusButton) { tap() }
+                minusButton.tap()
             }
         }
 
-        with(equalsButton) { tap() }
+        equalsButton.tap()
         return this
     }
 
-    fun getResultText(): String? = with(resultTextField) { getTextValue() }
+    fun getResultText(): String? = resultTextField.getTextValue()
 
     fun clearResult(): CalculatorScreen {
-        with(deleteButton) { longPress() }
+        deleteButton.longPress()
         return this
     }
 
     fun inputDigits(vararg numbers: Int): CalculatorScreen {
         numbers
-            .map { Button(Id, digitSelector.replaceAfterLast("_", it.toString())) }
-            .forEach {
-                it.tap()
-            }
+            .map { Button(driver, Id, digitSelector.replaceAfterLast("_", it.toString())) }
+            .forEach { it.tap() }
 
         return this
     }
 
     fun getPieValue(): String? {
-        with(piButton) { tap() }
+        piButton.tap()
         return getResultText()
     }
 
-    fun getHistoryTextValues(): List<String?> = with(historyTextViews) { getTextValues() }
+    fun getHistoryTextValues(): List<String?> = historyTextViews.getTextValues()
 }

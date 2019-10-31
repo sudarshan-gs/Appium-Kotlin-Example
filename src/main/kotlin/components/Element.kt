@@ -1,6 +1,6 @@
 package components
 
-import appium.core.AndroidDriverProvider
+import appium.core.IMobileDriver
 import componentInterfaces.IElement
 import componentInterfaces.ITouchable
 import io.appium.java_client.MobileElement
@@ -8,14 +8,17 @@ import io.appium.java_client.android.AndroidTouchAction
 import io.appium.java_client.touch.offset.ElementOption.element
 import utilities.LocatorUtilities.getLocator
 
-open class Element(private val locatorType: String, private val locatorValue: String) : IElement, ITouchable {
+open class Element(
+    private val driver: IMobileDriver,
+    private val locatorType: String,
+    private val locatorValue: String
+) : IElement, ITouchable {
 
-    private val driver = AndroidDriverProvider.getInstance()
-    private var touchAction = AndroidTouchAction(driver)
+    private var touchAction = AndroidTouchAction(driver.instance)
 
     override fun getAttribute(attributeName: String): String? {
         return try {
-            with(getElement()) { getAttribute(attributeName) }
+            getElement().getAttribute(attributeName)
         } catch (error: Exception) {
             throw Exception("Error getting value of $attributeName. ${error.message}")
         }
@@ -23,52 +26,37 @@ open class Element(private val locatorType: String, private val locatorValue: St
 
     override fun getTextValue(): String? {
         return try {
-            with(getElement()) { text }
+            getElement().text
         } catch (error: Exception) {
             throw Exception("Error getting text value. ${error.message}")
         }
     }
 
     override fun click() = try {
-        with(getElement()) { click() }
+        getElement().click()
     } catch (error: Exception) {
         throw Exception("Error clicking the element. ${error.message}")
     }
 
-    override fun tap(): Unit =
+    override fun tap() {
         try {
-            with(touchAction) {
-                val elementToBeTapped = element(getElement())
-                return@with with(
-                    tap(elementToBeTapped),
-                    { perform() }
-                )
-            }
-
+            touchAction.tap(element(getElement())).perform()
         } catch (error: Exception) {
             throw Exception("Error tapping on element. ${error.message}")
         }
+    }
 
-
-    override fun longPress(): Unit =
+    override fun longPress() {
         try {
-            with(touchAction) {
-                val elementToBeLongPressed = element(getElement())
-                return@with with(
-                    longPress(elementToBeLongPressed), { perform() }
-                )
-            }
+            touchAction.longPress(element(getElement())).perform()
         } catch (error: Exception) {
             throw Exception("Error longPressing element. ${error.message}")
         }
-
+    }
 
     protected fun getElement(): MobileElement {
         return try {
-            with(driver) {
-                val locator = getLocator(locatorType, locatorValue)
-                return@with findElement(locator)
-            }
+            driver.instance.findElement(getLocator(locatorType, locatorValue))
         } catch (error: Exception) {
             throw Exception("Error finding element with LocatorType: $locatorType and Value: $locatorValue. ${error.message}")
         }

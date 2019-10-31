@@ -6,7 +6,7 @@ const val Id = "id"
 const val Xpath = "xpath"
 const val Text = "text"
 const val ResourceId = "resourceId"
-const val ContentDesc = "contentdesc"
+const val ContentDesc = "contentDesc"
 
 object LocatorUtilities {
     fun getLocator(locatorType: String, locatorValue: String): By = when (locatorType) {
