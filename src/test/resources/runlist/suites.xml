@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="calculator_tests" data-provider-thread-count="2" parallel="tests" thread-count="2">
+    <test name="calculator tests" verbose="2" parallel="instances" thread-count="2">
+        <classes>
+            <class name="calculator.tests.CalculatorTests"/>
+            <parameter name="appPackage" value="com.android.calculator2"/>
+            <parameter name="appActivity" value=".Calculator"/>
+        </classes>
+    </test>
+</suite>

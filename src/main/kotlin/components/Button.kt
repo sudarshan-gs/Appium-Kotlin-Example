@@ -1,12 +1,13 @@
 package components
 
+import appium.core.IMobileDriver
 import componentInterfaces.IButton
 
-class Button(locatorType: String, locatorValue: String) :
-    IButton, Element(locatorType, locatorValue) {
+class Button(driver: IMobileDriver, locatorType: String, locatorValue: String) :
+    IButton, Element(driver, locatorType, locatorValue) {
 
     override fun submit() = try {
-        with(getElement()) { submit() }
+        getElement().submit()
     } catch (error: Exception) {
         throw Exception("Error submitting the button. ${error.message}")
     }

@@ -1,76 +1,82 @@
 package calculator.tests
 
-import appium.core.AndroidDriverProvider
+import appium.core.IMobileDriver
+import appium.core.MobileDriver
+import calculator.BaseTest
 import calculator.library.CalculatorScreen
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.testng.annotations.Factory
+import kotlin.test.*
 
 class CalculatorTests {
-    private val calculator = CalculatorScreen()
 
-    @BeforeEach
-    fun launchApp() = with(AndroidDriverProvider) { launchApp() }
+    private var mobileDriver: IMobileDriver
+    private var calculator: CalculatorScreen
 
-    @Test
+    @Factory(dataProvider = "Devices", dataProviderClass = BaseTest::class)
+    constructor(driver: MobileDriver) {
+        mobileDriver = driver
+        calculator = CalculatorScreen(mobileDriver)
+    }
+
+    @BeforeTest(alwaysRun = true)
+    fun launchApp() = mobileDriver.launchApp()
+
+    @Test(groups = ["calculator_tests"])
     fun validateAddingNumbers() {
-        val result = with(calculator) {
-            with(addNumbers(1, 2, 3, 4, 5)) { getResultText() }
-        }
+        val result = calculator
+            .addNumbers(1, 2, 3, 4, 5)
+            .getResultText()
 
-        Assertions.assertEquals("15", result)
+        assertEquals("15", result)
     }
 
-    @Test
+    @Test(groups = ["calculator_tests"])
     fun validateSubtractingNumbers() {
-        val result = with(calculator) {
-            with(subtractNumbers(9, 3, 4)) { getResultText() }
-        }
+        val result = calculator
+            .subtractNumbers(9, 3, 4)
+            .getResultText()
 
-        Assertions.assertEquals("2", result)
+        assertEquals("2", result)
     }
 
-    @Test
+    @Test(groups = ["calculator_tests"])
     fun validateClearingResult() {
-        val result = with(calculator) {
-            inputDigits(1, 2, 3)
-                .clearResult()
-                .getResultText()
-        }
+        val result = calculator
+            .inputDigits(1, 2, 3)
+            .clearResult()
+            .getResultText()
 
-        Assertions.assertTrue(result.isNullOrEmpty())
+        assertTrue { result.isNullOrEmpty() }
     }
 
-    @Test
+    @Test(groups = ["calculator_tests"])
     fun swipeAndTapPiAndValidateValue() {
-        with(AndroidDriverProvider) { swipeLeft() }
-        val pieValue = with(calculator) { getPieValue() }
-        with(AndroidDriverProvider) { swipeRight() }
-        Assertions.assertTrue(pieValue == "3.1415926535897")
+        mobileDriver.swipeLeft()
+        val pieValue = calculator.getPieValue()
+        mobileDriver.swipeRight()
+        assertTrue { pieValue!!.contains("3.14") }
     }
 
-    @Test
+    @Test(groups = ["calculator_tests"])
     fun validateHistory() {
         val expectedValues = listOf("Today", "1+2+3+4+5", "15", "9−4−3−1", "1")
 
-        with(calculator) {
-            addNumbers(1, 2, 3, 4, 5)
-                .clearResult()
-                .subtractNumbers(9, 4, 3, 1)
-        }
+        calculator
+            .addNumbers(1, 2, 3, 4, 5)
+            .clearResult()
+            .subtractNumbers(9, 4, 3, 1)
 
-        with(AndroidDriverProvider) { swipeDown() }
+        mobileDriver.swipeDown()
 
-        val historyTextValues = with(calculator) { getHistoryTextValues() }
+        val historyTextValues = calculator.getHistoryTextValues()
 
         val differences = expectedValues.filterIndexed { counter, value ->
             historyTextValues[counter] != value
         }
 
-        Assertions.assertTrue(differences.isEmpty())
+        assertTrue { differences.isEmpty() }
     }
 
-    @AfterEach
-    fun closeApp() = with(AndroidDriverProvider) { closeApp() }
+    @AfterTest(alwaysRun = true)
+    fun closeApp() = mobileDriver.closeApp()
 }
